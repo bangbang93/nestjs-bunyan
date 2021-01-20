@@ -27,6 +27,9 @@ interface IAsyncOptions extends Omit<IOptions, 'bunyan'> {
       }
     }
   ],
+  exports: [
+    Logger,
+  ],
 })
 export class BunyanLoggerModule {
   public static forRoot(options: IOptions): DynamicModule {

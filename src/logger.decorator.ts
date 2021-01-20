@@ -8,20 +8,28 @@ interface ILoggerPrefix {
 export const Prefixes: Set<ILoggerPrefix> = new Set()
 export const ReqPrefixes: Set<ILoggerPrefix> = new Set()
 
-export function Logger(prefix?: string): ReturnType<typeof Inject> {
+export function Logger(name?: string): ReturnType<typeof Inject> {
   return (target: Constructor, key: string | symbol, index?: number) => {
-    prefix = prefix || target.constructor.name
-    const symbol = Symbol(`LoggerService:${prefix}`)
-    Prefixes.add({name: prefix, symbol})
+    name = name || target.constructor.name
+    const symbol = Symbol(`LoggerService:${name}`)
+    Prefixes.add({name: name, symbol})
     Inject(symbol)(target, key, index)
   }
 }
 
-export function ReqLogger(prefix?: string): ReturnType<typeof Inject> {
+export function ReqLogger(name?: string): ReturnType<typeof Inject> {
   return (target: Constructor, key: string | symbol, index?: number) => {
-    prefix = prefix || target.constructor.name
-    const symbol = Symbol(`ReqLogger:${prefix}`)
-    ReqPrefixes.add({name: prefix, symbol})
+    name = name || target.constructor.name
+    const symbol = Symbol(`ReqLogger:${name}`)
+    ReqPrefixes.add({name: name, symbol})
     Inject(symbol)(target, key, index)
+  }
+}
+
+export function RegisterLogger(name?: string): ClassDecorator {
+  return (target: Function) => {
+    name = name || target.name
+    const symbol = Symbol(`ReqLogger:${name}`)
+    ReqPrefixes.add({name: name, symbol})
   }
 }
