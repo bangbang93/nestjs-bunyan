@@ -1,4 +1,4 @@
-import {Provider} from '@nestjs/common'
+import {Provider, Scope} from '@nestjs/common'
 import {REQUEST} from '@nestjs/core'
 import * as Logger from 'bunyan'
 import {Request} from 'express'
@@ -21,6 +21,7 @@ export function createLoggerProviders(): Provider<Logger>[] {
 export function *createRequestLoggerProviders(reqIdHeader?: string, customizer?: (logger: Logger, req: unknown) => Logger): Iterable<Provider<Logger>> {
   for (const prefix of ReqPrefixes.values()) {
     yield {
+      scope: Scope.REQUEST,
       provide: prefix.symbol,
       inject: [Logger, REQUEST],
       useFactory(logger: Logger, req: Request) {
