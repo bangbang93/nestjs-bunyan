@@ -8,7 +8,7 @@ interface ILoggerPrefix {
 export const Prefixes: Set<ILoggerPrefix> = new Set()
 export const ReqPrefixes: Set<ILoggerPrefix> = new Set()
 
-export function Logger(name?: string): ReturnType<typeof Inject> {
+export function InjectLogger(name?: string): ReturnType<typeof Inject> {
   return (target: Constructor, key: string | symbol, index?: number) => {
     name = name || target.constructor.name
     const symbol = Symbol(`LoggerService:${name}`)
@@ -16,6 +16,9 @@ export function Logger(name?: string): ReturnType<typeof Inject> {
     Inject(symbol)(target, key, index)
   }
 }
+
+/** @deprecated use @InjectLogger */
+export const Logger = InjectLogger
 
 export function ReqLogger(name?: string): ReturnType<typeof Inject> {
   return (target: Constructor, key: string | symbol, index?: number) => {
