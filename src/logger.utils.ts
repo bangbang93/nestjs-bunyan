@@ -11,3 +11,9 @@ export function getLoggerToken(name: string): symbol {
     if (prefix.name === name) return prefix.symbol
   }
 }
+
+export function createLogger(name: string): symbol {
+  const symbol = Symbol(`CustomLogger:${name}`)
+  Prefixes.add({name, symbol})
+  return symbol
+}

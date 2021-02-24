@@ -36,9 +36,3 @@ export function RegisterLogger(name?: string): ClassDecorator {
     ReqPrefixes.add({name: name, symbol})
   }
 }
-
-export function createLogger(name: string): symbol {
-  const symbol = Symbol(`CustomLogger:${name}`)
-  Prefixes.add({name, symbol})
-  return symbol
-}
