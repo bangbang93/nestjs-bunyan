@@ -21,7 +21,7 @@
     "@types/bunyan": "^1.8.6"
   },
   "dependencies": {
-    "@bangbang93/utils": "^0.6.0",
+    "@bangbang93/utils": "^0.10.2",
     "bunyan": "^1.8.15"
   },
   "files": [
