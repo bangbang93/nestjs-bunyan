@@ -4,6 +4,7 @@ import * as Logger from 'bunyan'
 import {
   createLoggerExports, createLoggerProviders, createReqLoggerExports, createRequestLoggerProviders,
 } from './logger.providers'
+import {LoggerService} from './logger.service'
 
 interface IOptions {
   bunyan: Logger.LoggerOptions
@@ -25,10 +26,12 @@ interface IAsyncOptions extends Omit<IOptions, 'bunyan'> {
       useFactory(bunyanOptions: Logger.LoggerOptions) {
         return Logger.createLogger(bunyanOptions)
       }
-    }
+    },
+    LoggerService,
   ],
   exports: [
     Logger,
+    LoggerService,
   ],
 })
 export class BunyanLoggerModule {
