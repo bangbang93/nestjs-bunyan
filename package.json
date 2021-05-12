@@ -1,6 +1,6 @@
 {
   "name": "nestjs-bunyan",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
