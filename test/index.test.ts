@@ -1,5 +1,5 @@
 import {Controller, Get, Inject, Injectable, Module, OnModuleInit, Req, Scope} from '@nestjs/common'
-import {NestFactory} from '@nestjs/core'
+import {ModuleRef, NestFactory} from '@nestjs/core'
 import {stdSerializers} from 'bunyan'
 import {Request} from 'express'
 import {BunyanLoggerModule, InjectLogger} from '../src'
@@ -55,6 +55,8 @@ describe('nestjs-bunyan', function () {
     const app = await NestFactory.create(AppModule)
     const logger = await app.resolve(BunyanLogger)
     logger.info('custom logger')
+    const appService = await app.resolve(AppService)
+    expect(appService.logger).toBeInstanceOf(Logger)
     await app.init()
     const agent = supertest.agent(app.getHttpServer())
     await agent.get('/').set({'x-request-id': randomBytes(16).toString('hex')}).expect(200)
