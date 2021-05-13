@@ -1,9 +1,10 @@
-import {DynamicModule, Module} from '@nestjs/common'
+import {Constructor} from '@bangbang93/utils'
+import {DynamicModule, Module, Scope} from '@nestjs/common'
 import {FactoryProvider} from '@nestjs/common/interfaces/modules/provider.interface'
+import {INQUIRER, REQUEST} from '@nestjs/core'
 import * as Logger from 'bunyan'
-import {
-  createLoggerExports, createLoggerProviders, createReqLoggerExports, createRequestLoggerProviders,
-} from './logger.providers'
+import {Request} from 'express'
+import {BunyanLogger, BunyanRequestLogger} from './logger.constant'
 import {LoggerService} from './logger.service'
 
 interface IOptions {
@@ -11,6 +12,7 @@ interface IOptions {
   isGlobal?: boolean
   isEnableRequestLogger?: boolean
   reqIdHeader?: string
+
   customRequestLogger?(childLogger: Logger, request: unknown): Logger
 }
 
@@ -25,7 +27,25 @@ interface IAsyncOptions extends Omit<IOptions, 'bunyan'> {
       inject: ['BunyanOptions'],
       useFactory(bunyanOptions: Logger.LoggerOptions) {
         return Logger.createLogger(bunyanOptions)
-      }
+      },
+    }, {
+      provide: BunyanLogger,
+      scope: Scope.TRANSIENT,
+      inject: [Logger, INQUIRER],
+      useFactory(logger: Logger, a: Constructor) {
+        return logger.child({components: a?.constructor.name})
+      },
+    }, {
+      provide: BunyanRequestLogger,
+      scope: Scope.REQUEST,
+      inject: [Logger, INQUIRER, REQUEST, 'Options'],
+      useFactory(logger: Logger, a: Constructor, req: Request, options: IOptions) {
+        logger = logger.child({components: a?.constructor.name, reqId: req?.headers[options.reqIdHeader]})
+        if (options.customRequestLogger) {
+          logger = options.customRequestLogger(logger, req)
+        }
+        return logger
+      },
     },
     LoggerService,
   ],
@@ -37,21 +57,18 @@ interface IAsyncOptions extends Omit<IOptions, 'bunyan'> {
 export class BunyanLoggerModule {
   public static forRoot(options: IOptions): DynamicModule {
     options.reqIdHeader ??= 'x-request-id'
-    const loggerProviders = createLoggerProviders()
-    const reqLoggerProviders = options.isEnableRequestLogger ? createRequestLoggerProviders(options.reqIdHeader, options.customRequestLogger) : []
-    const reqLoggerExports = options.isEnableRequestLogger ? createReqLoggerExports(): []
     return {
       module: BunyanLoggerModule,
       providers: [{
         provide: 'BunyanOptions',
         useValue: options.bunyan,
-      },
-        ...loggerProviders,
-        ...reqLoggerProviders,
-      ],
+      }, {
+        provide: 'Options',
+        useValue: options,
+      }],
       exports: [
-        ...createLoggerExports(),
-        ...reqLoggerExports
+        BunyanLogger,
+        BunyanRequestLogger,
       ],
       global: options.isGlobal,
     }
@@ -59,21 +76,18 @@ export class BunyanLoggerModule {
 
   public static forRootAsync(options: IAsyncOptions): DynamicModule {
     options.reqIdHeader ??= 'x-request-id'
-    const loggerProviders = createLoggerProviders()
-    const reqLoggerProviders = options.isEnableRequestLogger ? createRequestLoggerProviders(options.reqIdHeader, options.customRequestLogger) : []
-    const reqLoggerExports = options.isEnableRequestLogger ? createReqLoggerExports(): []
     return {
       module: BunyanLoggerModule,
       providers: [{
         provide: 'BunyanOptions',
         ...options.bunyan,
-      },
-        ...loggerProviders,
-        ...reqLoggerProviders,
-      ],
+      }, {
+        provide: 'Options',
+        useValue: options,
+      }],
       exports: [
-        ...createLoggerExports(),
-        ...reqLoggerExports,
+        BunyanLogger,
+        BunyanRequestLogger,
       ],
       global: options.isGlobal,
     }
