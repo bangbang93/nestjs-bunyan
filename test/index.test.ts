@@ -3,7 +3,7 @@ import {ModuleRef, NestFactory} from '@nestjs/core'
 import {stdSerializers} from 'bunyan'
 import {Request} from 'express'
 import {BunyanLoggerModule, InjectLogger} from '../src'
-import {BunyanLogger, BunyanRequestLogger} from '../src/logger.constant'
+import {BunyanLogger, BunyanRequestLogger} from '../src'
 import {randomBytes} from 'crypto'
 import Logger = require('bunyan')
 import supertest = require('supertest')

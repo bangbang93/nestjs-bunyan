@@ -52,6 +52,8 @@ interface IAsyncOptions extends Omit<IOptions, 'bunyan'> {
   exports: [
     Logger,
     LoggerService,
+    BunyanLogger,
+    BunyanRequestLogger,
   ],
 })
 export class BunyanLoggerModule {
@@ -66,10 +68,6 @@ export class BunyanLoggerModule {
         provide: 'Options',
         useValue: options,
       }],
-      exports: [
-        BunyanLogger,
-        BunyanRequestLogger,
-      ],
       global: options.isGlobal,
     }
   }
@@ -85,10 +83,6 @@ export class BunyanLoggerModule {
         provide: 'Options',
         useValue: options,
       }],
-      exports: [
-        BunyanLogger,
-        BunyanRequestLogger,
-      ],
       global: options.isGlobal,
     }
   }
