@@ -28,8 +28,8 @@
     "@types/bunyan": "^1.8.6"
   },
   "dependencies": {
-    "@bangbang93/utils": "^2.0.0",
-    "bunyan": "^1.8.15"
+    "bunyan": "^1.8.15",
+    "type-fest": "^2.6.0"
   },
   "files": [
     "dist"

@@ -1,9 +1,9 @@
-import {Constructor} from '@bangbang93/utils'
 import {DynamicModule, Module, Scope} from '@nestjs/common'
 import {FactoryProvider} from '@nestjs/common/interfaces/modules/provider.interface'
 import {INQUIRER, REQUEST} from '@nestjs/core'
 import * as Logger from 'bunyan'
 import {Request} from 'express'
+import {Constructor} from 'type-fest'
 import {BunyanLogger, BunyanRequestLogger} from './logger.constant'
 import {LoggerService} from './logger.service'
 
@@ -32,14 +32,14 @@ interface IAsyncOptions extends Omit<IOptions, 'bunyan'> {
       provide: BunyanLogger,
       scope: Scope.TRANSIENT,
       inject: [Logger, INQUIRER],
-      useFactory(logger: Logger, a: Constructor) {
+      useFactory(logger: Logger, a: Constructor<unknown>) {
         return logger.child({components: a?.constructor.name})
       },
     }, {
       provide: BunyanRequestLogger,
       scope: Scope.REQUEST,
       inject: [Logger, INQUIRER, REQUEST, 'Options'],
-      useFactory(logger: Logger, a: Constructor, req: Request, options: IOptions) {
+      useFactory(logger: Logger, a: Constructor<unknown>, req: Request, options: IOptions) {
         logger = logger.child({components: a?.constructor.name, reqId: req?.headers[options.reqIdHeader]})
         if (options.customRequestLogger) {
           logger = options.customRequestLogger(logger, req)
