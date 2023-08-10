@@ -33,14 +33,14 @@ interface IAsyncOptions extends Omit<IOptions, 'bunyan'> {
       scope: Scope.TRANSIENT,
       inject: [Logger, INQUIRER],
       useFactory(logger: Logger, a: Constructor<unknown>) {
-        return logger.child({components: a?.constructor.name})
+        return logger.child({context: a?.constructor.name})
       },
     }, {
       provide: BunyanRequestLogger,
       scope: Scope.REQUEST,
       inject: [Logger, INQUIRER, REQUEST, 'Options'],
       useFactory(logger: Logger, a: Constructor<unknown>, req: Request, options: IOptions) {
-        logger = logger.child({components: a?.constructor.name, reqId: req?.headers[options.reqIdHeader]})
+        logger = logger.child({context: a?.constructor.name, reqId: req?.headers[options.reqIdHeader]})
         if (options.customRequestLogger) {
           logger = options.customRequestLogger(logger, req)
         }
