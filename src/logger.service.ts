@@ -8,22 +8,42 @@ export class LoggerService implements NestLoggerService {
   ) {}
 
   public debug(message: any, context?: string): void {
-    this.logger.debug({context}, message)
+    if (typeof message === 'object') {
+      this.logger.debug({...message, context})
+    } else {
+      this.logger.debug({context}, message)
+    }
   }
 
   public error(message: any, trace?: string, context?: string): void {
-    this.logger.error({context, trace}, message)
+    if (typeof message === 'object') {
+      this.logger.error({...message, trace, context})
+    } else {
+      this.logger.error({trace, context}, message)
+    }
   }
 
   public log(message: any, context?: string): void {
-    this.logger.info({context}, message)
+    if (typeof message === 'object') {
+      this.logger.info({...message, context})
+    } else {
+      this.logger.info({context}, message)
+    }
   }
 
   public verbose(message: any, context?: string): void {
-    this.logger.trace({context}, message)
+    if (typeof message === 'object') {
+      this.logger.trace({...message, context})
+    } else {
+      this.logger.trace({context}, message)
+    }
   }
 
   public warn(message: any, context?: string): void {
-    this.logger.warn({context}, message)
+    if (typeof message === 'object') {
+      this.logger.warn({...message, context})
+    } else {
+      this.logger.warn({context}, message)
+    }
   }
 }
