@@ -13,7 +13,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "devDependencies": {
-    "@nestjs/platform-express": "^11.0.8",
+    "@nestjs/platform-express": "^11.1.17",
     "@types/bunyan": "^1.8.11",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
