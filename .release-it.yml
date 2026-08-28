@@ -1,6 +1,6 @@
 npm:
   skipChecks: true
-  publish: true
+  publish: pnpm
 git:
   commit: true
   push: true
