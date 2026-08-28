@@ -9,3 +9,6 @@ dist
 node_modules
 *.tgz
 pnpm-debug.log*
+
+# agent tooling
+.omo/
